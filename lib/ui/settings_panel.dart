@@ -94,8 +94,10 @@ class _SettingsBody extends StatelessWidget {
             const Icon(AppIcons.textLarger, size: 18),
           ],
         ),
-        const SizedBox(height: 12),
-        _SupporterSection(state: state),
+        if (state.monetized) ...[
+          const SizedBox(height: 12),
+          _SupporterSection(state: state),
+        ],
         const Divider(height: 32),
         const _AboutRow(),
       ],

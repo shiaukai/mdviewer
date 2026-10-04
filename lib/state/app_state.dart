@@ -9,13 +9,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../models/md_document.dart';
 import '../monetization/ads.dart';
+import '../monetization/store_config.dart';
 import '../monetization/supporter.dart';
 import '../services/bookmarks.dart';
 import '../services/file_service.dart';
 import 'viewer_controller.dart';
 
 class AppState extends ChangeNotifier {
-  AppState._(this._prefs)
+  AppState._(this._prefs, {required this.monetized})
       : themeMode = ThemeMode.values[(_prefs.getInt(_kTheme) ?? 0)
             .clamp(0, ThemeMode.values.length - 1)],
         textScale = _prefs.getDouble(_kTextScale) ?? 1.0,
@@ -37,8 +38,12 @@ class AppState extends ChangeNotifier {
   static const minTextScale = 0.8;
   static const maxTextScale = 1.6;
 
-  static Future<AppState> load() async =>
-      AppState._(await SharedPreferences.getInstance());
+  static Future<AppState> load({bool monetized = StoreConfig.enabled}) async =>
+      AppState._(await SharedPreferences.getInstance(), monetized: monetized);
+
+  /// Official store build: show ads / the support bar and the supporter
+  /// purchase. Off for builds from source.
+  final bool monetized;
 
   final SharedPreferences _prefs;
   final viewer = ViewerController();

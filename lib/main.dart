@@ -18,10 +18,12 @@ Future<void> main(List<String> args) async {
   final state = await AppState.load();
   runApp(MdViewerApp(state: state));
 
-  // Check the supporter purchase; only non-supporters on phones/tablets
-  // load the ads SDK (and see the consent form where required).
-  unawaited(state.supporter.init());
-  if (!state.supporter.isSupporter) unawaited(state.ads.start());
+  // Store builds only: check the supporter purchase; only non-supporters on
+  // phones/tablets load the ads SDK (and see the consent form if required).
+  if (state.monetized) {
+    unawaited(state.supporter.init());
+    if (!state.supporter.isSupporter) unawaited(state.ads.start());
+  }
 
   // Files passed by the OS: command-line arguments (Windows "Open with"),
   // or the platform channel (macOS Finder, iOS Files, Android intents).

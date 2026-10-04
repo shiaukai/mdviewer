@@ -6,10 +6,10 @@ import '../services/file_service.dart';
 import '../state/app_state.dart';
 import 'app_icons.dart';
 
-/// The one place the app asks for money: a strip under the document.
+/// The one place the store builds ask for money: a strip under the document.
 ///
 /// Phones/tablets show an AdMob banner, desktop shows a small "成為支持者"
-/// bar. Supporters see nothing.
+/// bar. Supporters — and builds from source — see nothing.
 class SupportSlot extends StatelessWidget {
   const SupportSlot({super.key, required this.state});
 
@@ -21,7 +21,7 @@ class SupportSlot extends StatelessWidget {
       listenable: Listenable.merge([state.supporter, state.ads]),
       builder: (context, _) {
         final supporter = state.supporter;
-        if (supporter.isSupporter) return const SizedBox.shrink();
+        if (!state.monetized || supporter.isSupporter) return const SizedBox.shrink();
         if (isMobilePlatform) {
           if (!state.ads.ready) return const SizedBox.shrink();
           return _Strip(child: const SafeArea(top: false, child: AdBanner()));

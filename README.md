@@ -30,19 +30,7 @@
 - 淺色／深色／跟隨系統、文字大小 80%–160%
 - 記住最近開啟的檔案，重開 App 會回到上次的文件
 - 電腦版：開啟資料夾（側邊欄樹狀列出所有 `.md`）、拖曳檔案或資料夾、外部編輯存檔後自動重新載入、鍵盤快捷鍵（⌘/Ctrl + O、⇧O、R、B、+、-、0、,）
-- 系統「打開方式」：macOS Finder、iOS「檔案」分享、Android「開啟方式」、Windows（Store 版會關聯 `.md`）
-
-## 免費使用與「支持者」
-
-所有功能都免費。底部有一條：手機／平板是 AdMob 橫幅，電腦版是「成為支持者」提示列（可暫時關閉）。
-
-一次買斷 **支持者**（建議 US$0.99）就會移除那一條，不會多出任何功能。
-
-| 商店 | 購買方式 | 備註 |
-| --- | --- | --- |
-| App Store（iOS + macOS） | 同一個非消耗型內購 `supporter` | 用 Universal Purchase，買一次 iPhone／iPad／Mac 通用 |
-| Google Play | 應用程式內產品 `supporter` | |
-| Microsoft Store | 耐用型附加元件 | Store ID 填到 `MS_STORE_ADDON_ID` |
+- 系統「打開方式」：macOS Finder、iOS「檔案」分享、Android「開啟方式」、Windows（MSIX 安裝版會關聯 `.md`）
 
 ## 開發
 
@@ -58,49 +46,9 @@ flutter run -d macos      # 或 windows / iPhone 模擬器 / Android 裝置
 tool/sim_add_files.sh 你的檔案.md
 ```
 
-沒有任何設定也能直接執行：廣告用的是 Google 公開的測試 ID（會顯示 "Test mode"），內購在商品建立前會顯示「目前無法連線到商店」。
+自己編譯的版本就是完整的閱讀器：沒有廣告也沒有內購——程式不會初始化廣告 SDK，也不會查詢任何商店。官方在各商店上架的版本另外啟用了廣告與一次性的「支持者」購買（程式碼在 `lib/monetization/`，預設關閉）。
 
-## 上架設定
-
-正式 ID 都不放進 repo（已列在 `.gitignore`）：
-
-| 檔案 | 內容 |
-| --- | --- |
-| `config/release.json` | 複製 `config/release.example.json`：內購商品 ID、Microsoft Store 附加元件 ID、AdMob 橫幅廣告單元 ID |
-| `android/admob.properties` | `appId=ca-app-pub-…~…`（AdMob Android App ID） |
-| `ios/Flutter/Secrets.xcconfig` | `ADMOB_APP_ID = ca-app-pub-…~…`（AdMob iOS App ID） |
-
-正式版建置都要帶上設定檔：
-
-```bash
-flutter build ipa --dart-define-from-file=config/release.json
-```
-```bash
-flutter build macos --dart-define-from-file=config/release.json
-```
-```bash
-flutter build appbundle --dart-define-from-file=config/release.json
-```
-
-Windows（要在 Windows 上執行）：先填好 `pubspec.yaml` 裡 `msix_config` 的發行者資訊，再：
-
-```bash
-flutter build windows --dart-define-from-file=config/release.json
-```
-```bash
-dart run msix:create
-```
-
-各商店後台要做的事：
-
-- **App Store Connect**：iOS 和 macOS 放在**同一個 App 紀錄**（Bundle ID 相同）以啟用 Universal Purchase；建立非消耗型內購 `supporter`；隱私標籤要申報廣告相關資料（iOS 有 AdMob）。Mac 版已開啟 App Sandbox。
-- **Google Play**：建立應用程式內產品 `supporter`；填寫資料安全表單；新的個人開發者帳號要先完成 12 人、14 天的封閉測試。
-- **Microsoft Partner Center**：保留名稱、建立耐用型附加元件，把 Store ID 填進 `config/release.json`，把產品身分識別填進 `msix_config`。內購只在從 Store 安裝（或與 Store 關聯）的 MSIX 版本有效。
-- **AdMob**：建立 iOS／Android 兩個應用程式與橫幅廣告單元；在「隱私權與訊息」設定 GDPR 同意訊息（App 用 UMP 顯示）；在開發者網站放 `app-ads.txt`。
-- 所有商店都需要**隱私權政策網址**；開發者名稱填「Easier Life」（Apple 個人帳號只能顯示本名，要顯示品牌名需以公司／行號註冊組織帳號）。
-- **品牌網站**：隱私權政策與 `app-ads.txt` 放在 Easier Life 的網站上；`app-ads.txt` 必須在網域根目錄（例如 `https://easier.tw/app-ads.txt`）。網站上線後，把網址填進 `lib/brand.dart` 的 `Brand.website`，App 裡的「Easier Life 出品」就會變成連結。
-
-測試內購：iOS／macOS 用 App Store Connect 的沙盒帳號，Android 用 Play Console 的授權測試人員。
+隱私權政策見 [PRIVACY.md](PRIVACY.md)。
 
 ## 專案結構
 
@@ -113,16 +61,15 @@ lib/
   services/                 檔案讀取／選擇／監看、資料夾掃描、原生 channel
   models/md_document.dart   文件、標題解析（GitHub slug）
   markdown/                 樣式、程式碼區塊、圖片、HTML 轉換、提示區塊
-  ui/                       HomePage、DesktopShell、MobileShell、閱讀器、大綱、側邊欄、底部支持列
-  monetization/             支持者購買（App Store／Play／Microsoft Store）、AdMob 與同意視窗、商店 ID
+  ui/                       HomePage、DesktopShell、MobileShell、閱讀器、大綱、側邊欄
+  monetization/             商店版才啟用的廣告與內購（預設關閉）
 ```
 
 ## 平台備註
 
 - **macOS**：開啟 App Sandbox（Mac App Store 要求）。使用者開過的檔案與資料夾會存成 security-scoped bookmark，重開後仍可讀取。只開單一檔案時，同資料夾的圖片需要授權資料夾才看得到——App 會顯示「授權資料夾」提示；用「開啟資料夾」開的文件不受影響。
 - **iOS / Android**：開啟的檔案會複製一份到 App 內（「我的檔案」），之後不需要原始檔也能再開。因為只複製單一檔案，文件內的 **相對路徑圖片與連結在手機上無法使用**（網路圖片正常）。
-- **Windows**：用命令列參數開檔；Store 的 MSIX 版本會註冊 `.md` 等副檔名的「開啟方式」。
-- Bundle ID／Application ID 是 `tw.easier.mdviewer`（iOS 與 macOS 必須相同才能共用購買；第一次上架後就不能再改）。
+- **Windows**：用命令列參數開檔；MSIX 安裝版會註冊 `.md` 等副檔名的「開啟方式」。
 
 ## Logo 與 App 圖示
 

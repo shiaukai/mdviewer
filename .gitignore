@@ -44,7 +44,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Store / ad identifiers for release builds (see README › 上架設定)
+# Store build identifiers (see RELEASING.md)
 /config/release.json
 /android/admob.properties
 /ios/Flutter/Secrets.xcconfig

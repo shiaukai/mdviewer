@@ -109,10 +109,23 @@ See [docs](a.md).
     expect(find.textContaining('See docs.', findRichText: true), findsOneWidget);
   });
 
-  testWidgets('desktop support bar: dismissible, gone for supporters', (tester) async {
+  testWidgets('builds from source show no ads, support bar or purchase UI', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final state = await AppState.load(); // STORE_BUILD not defined
+    expect(state.monetized, isFalse);
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(MdViewerApp(state: state));
+    await tester.pump();
+    expect(find.textContaining('成為支持者'), findsNothing);
+  });
+
+  testWidgets('store build: desktop support bar, dismissible, gone for supporters', (tester) async {
     // Tests run on a desktop host, so the slot shows the house bar, not ads.
     SharedPreferences.setMockInitialValues({});
-    final state = await AppState.load();
+    final state = await AppState.load(monetized: true);
     tester.view.physicalSize = const Size(1200, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -126,7 +139,7 @@ See [docs](a.md).
     expect(find.textContaining('成為支持者即可移除這條提示'), findsNothing);
 
     SharedPreferences.setMockInitialValues({'isSupporter': true});
-    final supporterState = await AppState.load();
+    final supporterState = await AppState.load(monetized: true);
     await tester.pumpWidget(MdViewerApp(state: supporterState));
     await tester.pump();
     expect(find.textContaining('成為支持者即可移除這條提示'), findsNothing);

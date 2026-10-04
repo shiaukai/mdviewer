@@ -1,14 +1,20 @@
 import 'dart:io';
 
-/// Store product and ad identifiers.
+/// Configuration for the official store builds.
 ///
-/// The repository ships Google's public test ad units so anyone can build and
-/// run the app. Release builds pass the real values:
+/// Release builds pass everything from a git-ignored file:
 ///
 ///   flutter build ios --dart-define-from-file=config/release.json
 ///
-/// `config/release.json` is git-ignored; copy `config/release.example.json`.
+/// (copy `config/release.example.json`). The defaults are Google's public test
+/// ad units, so a store build can be tried locally with
+/// `--dart-define=STORE_BUILD=true`.
 abstract final class StoreConfig {
+  /// Ads and the supporter purchase exist only in the official store builds
+  /// (`"STORE_BUILD": true` in config/release.json). Builds from source leave
+  /// them off: no ads SDK start, no store queries, no purchase UI.
+  static const enabled = bool.fromEnvironment('STORE_BUILD');
+
   /// The one-time "支持者" purchase. App Store (one product shared by iOS and
   /// macOS through universal purchase) and Google Play use this product ID.
   static const supporterProductId =
