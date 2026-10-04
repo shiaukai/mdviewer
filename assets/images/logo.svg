@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5C8DFF"/>
+    <stop offset="1" stop-color="#2A52CC"/>
+  </linearGradient>
+</defs><rect width="1024" height="1024" rx="228" fill="url(#bg)"/><path fill="#1C3A9E" fill-opacity="0.35"
+  d="M316 216H612L744 348V804Q744 840 708 840H316Q280 840 280 804V252Q280 216 316 216Z"/>
+<path fill="#FFFFFF"
+  d="M316 200H612L744 332V788Q744 824 708 824H316Q280 824 280 788V236Q280 200 316 200Z"/>
+<path fill="#C8D7FF" d="M612 200V300Q612 332 644 332H744Z"/>
+<rect x="318" y="296" width="214" height="32" rx="16" fill="#D3DEF8"/>
+<rect x="318" y="364" width="340" height="32" rx="16" fill="#D3DEF8"/>
+<g fill="none" stroke="#2F5BD8" stroke-width="46" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M341 714V500L421 596L501 500V714"/>
+  <path d="M634 500V714M582 662L634 714L686 662"/>
+</g></svg>

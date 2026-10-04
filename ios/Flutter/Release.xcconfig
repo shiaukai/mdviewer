@@ -1,0 +1,7 @@
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+#include "Generated.xcconfig"
+
+// AdMob app ID: Google's public test ID unless ios/Flutter/Secrets.xcconfig
+// (git-ignored) overrides it with `ADMOB_APP_ID = ca-app-pub-…~…`.
+ADMOB_APP_ID = ca-app-pub-3940256099942544~1458002511
+#include? "Secrets.xcconfig"
