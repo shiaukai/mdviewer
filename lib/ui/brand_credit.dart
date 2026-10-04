@@ -3,18 +3,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../brand.dart';
 
-/// "Easier Life 簡單點生活 出品" with the brand mark. Links to the brand
-/// website once [Brand.website] is set.
+/// "Easier Life 簡單點生活 出品" with the brand mark, shown in About only.
+/// Links to the brand website once [Brand.website] is set.
 class BrandCredit extends StatelessWidget {
-  const BrandCredit({super.key, this.compact = false});
-
-  /// Smaller variant for the welcome screen footer.
-  final bool compact;
+  const BrandCredit({super.key});
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final size = compact ? 16.0 : 18.0;
+    const size = 18.0;
     final content = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -24,8 +21,8 @@ class BrandCredit extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          compact ? 'by ${Brand.name} · ${Brand.nameZh}' : '${Brand.name} ${Brand.nameZh} 出品',
-          style: TextStyle(fontSize: compact ? 12 : 12.5, color: scheme.onSurfaceVariant),
+          '${Brand.name} ${Brand.nameZh} 出品',
+          style: TextStyle(fontSize: 12.5, color: scheme.onSurfaceVariant),
         ),
       ],
     );

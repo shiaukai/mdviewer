@@ -128,8 +128,7 @@ class _SupporterSection extends StatelessWidget {
       children
         ..add(Text(
           [
-            isMobilePlatform ? '一次買斷即可移除廣告' : '一次買斷即可移除底部提示',
-            '，也支持 ${Brand.name} 繼續做簡單好用的小工具。',
+            isMobilePlatform ? '一次買斷即可移除廣告，同時支持持續開發。' : '一次買斷即可移除底部提示，同時支持持續開發。',
             if (apple) '在 iPhone、iPad 與 Mac 上通用。',
           ].join(''),
           style: muted,

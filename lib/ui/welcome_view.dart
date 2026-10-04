@@ -5,7 +5,6 @@ import 'package:path/path.dart' as p;
 import '../services/file_service.dart';
 import '../state/app_state.dart';
 import 'app_icons.dart';
-import 'brand_credit.dart';
 
 /// Shown when no document is open.
 class WelcomeView extends StatelessWidget {
@@ -79,8 +78,6 @@ class WelcomeView extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
               ],
-              const SizedBox(height: 36),
-              const BrandCredit(compact: true),
             ],
           ),
         ),
