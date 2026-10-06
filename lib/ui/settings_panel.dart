@@ -22,9 +22,14 @@ Future<void> showSettings(BuildContext context, AppState state, {required bool s
       showDragHandle: true,
       useSafeArea: true,
       isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-        child: body,
+      // useSafeArea only covers top/left/right; the bottom inset keeps the
+      // last row clear of Android's navigation bar and the home indicator.
+      builder: (context) => SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+          child: body,
+        ),
       ),
     );
   }

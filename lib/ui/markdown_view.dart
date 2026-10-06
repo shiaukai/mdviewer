@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:super_sliver_list/super_sliver_list.dart';
 
 import '../markdown/md_theme.dart';
@@ -96,9 +97,15 @@ class _MarkdownViewState extends State<MarkdownView> {
     _onScroll();
   }
 
+  /// Heading the user jumped to (outline, link). It stays highlighted even
+  /// if the document can't scroll it to the top, until the user scrolls.
+  int? _pinnedHeading;
+
   void _jumpTo(int index, {bool animate = true}) {
     if (!_list.isAttached || !_scroll.hasClients || _blocks.isEmpty) return;
     index = index.clamp(0, _blocks.length - 1);
+    final heading = widget.document.headings.indexWhere((h) => h.blockIndex == index);
+    _pinnedHeading = heading >= 0 ? heading : null;
     if (animate) {
       _list.animateToItem(
         index: index,
@@ -142,6 +149,7 @@ class _MarkdownViewState extends State<MarkdownView> {
   /// The section being read: the last heading at or above the top edge.
   /// At the very bottom, the last heading that is on screen.
   int _currentHeading(ScrollPosition pos, (int, int)? range) {
+    if (_pinnedHeading != null) return _pinnedHeading!;
     final headings = widget.document.headings;
     var result = -1;
     if (range == null) return result;
@@ -207,7 +215,9 @@ class _MarkdownViewState extends State<MarkdownView> {
     return MediaQuery(
       data: mq.copyWith(textScaler: scaler),
       child: LayoutBuilder(builder: (context, constraints) {
-        final minSide = widget.compact ? 18.0 : 40.0;
+        // Narrow desktop panes (7" tablets, phones in landscape with the
+        // sidebar open) need the width more than the margin.
+        final minSide = widget.compact || constraints.maxWidth < 560 ? 18.0 : 40.0;
         final side = math.max(minSide, (constraints.maxWidth - _maxContentWidth * widget.textScale) / 2);
         Widget list = SuperListView.builder(
           key: _viewportKey,
@@ -234,7 +244,14 @@ class _MarkdownViewState extends State<MarkdownView> {
           controller: _scroll,
           child: Focus(
             focusNode: _focus,
-            child: SelectionArea(child: list),
+            child: NotificationListener<UserScrollNotification>(
+              // Programmatic jumps don't send these; user scrolling does.
+              onNotification: (n) {
+                if (n.direction != ScrollDirection.idle) _pinnedHeading = null;
+                return false;
+              },
+              child: SelectionArea(child: list),
+            ),
           ),
         );
       }),

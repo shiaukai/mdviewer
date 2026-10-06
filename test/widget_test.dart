@@ -89,6 +89,31 @@ Intro paragraph.
     expect(controller.currentHeading.value, 20);
   });
 
+  testWidgets('jumping to a heading near the end keeps it highlighted', (tester) async {
+    final controller = ViewerController();
+    final doc = MdDocument(title: 't', content: '''
+# Title
+
+${List.filled(40, 'Long paragraph text.').join('\n\n')}
+
+## Near the end
+
+Short.
+
+## Last
+
+Short.
+''');
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(body: MarkdownView(document: doc, controller: controller, onLinkTap: (_) {})),
+    ));
+    await tester.pumpAndSettle();
+    // "Near the end" can't reach the top: the list stops at its bottom edge.
+    controller.jumpToHeading(doc.headings[1]);
+    await tester.pumpAndSettle();
+    expect(controller.currentHeading.value, 1);
+  });
+
   testWidgets('raw HTML: comments hidden, common tags rendered as text', (tester) async {
     final doc = MdDocument(title: 't', content: '''
 <!-- secret comment -->

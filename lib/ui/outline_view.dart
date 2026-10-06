@@ -108,7 +108,7 @@ class _OutlineViewState extends State<OutlineView> {
       valueListenable: widget.controller.currentHeading,
       builder: (context, current, _) => ListView.builder(
         controller: _scroll,
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.only(top: 8, bottom: 8 + MediaQuery.paddingOf(context).bottom),
         itemExtent: _itemExtent,
         itemCount: headings.length,
         itemBuilder: (context, i) {
