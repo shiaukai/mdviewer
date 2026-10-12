@@ -34,6 +34,9 @@ flutter run --dart-define=STORE_BUILD=true
 | `config/release.json` | 複製 `config/release.example.json`：內購商品 ID、Microsoft Store 附加元件 ID、AdMob 橫幅廣告單元 ID |
 | `android/admob.properties` | `appId=ca-app-pub-…~…`（AdMob Android App ID） |
 | `ios/Flutter/Secrets.xcconfig` | `ADMOB_APP_ID = ca-app-pub-…~…`（AdMob iOS App ID） |
+| `android/key.properties` | Google Play 上傳金鑰：`storeFile`、`storePassword`、`keyAlias`、`keyPassword`。沒有這個檔案時，release 版會用 debug 金鑰簽署，Google Play 不收 |
+
+上傳金鑰用 `keytool -genkey -v -keystore ~/keys/mdviewer-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload` 建立，放在 repo 以外並另外備份。
 
 正式版建置都要帶上設定檔：
 

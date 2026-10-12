@@ -78,7 +78,7 @@ class _AdBannerState extends State<AdBanner> {
     _ad?.dispose();
     _ad = null;
     _loaded = false;
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(width);
+    final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSize(width);
     if (!mounted || size == null || width != _width) return;
     final ad = BannerAd(
       adUnitId: StoreConfig.bannerAdUnitId,
